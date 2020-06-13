@@ -151,6 +151,10 @@ When the report is created, data will be populated in ascending order
 
 ##### Start the Flask web server using the following commands
 ```bash
+# Create list-v1-projects-hourly report and reportquery 
+oc create -f https://raw.githubusercontent.com/dburugupalli/SSMT/feature2/openshift-metering-templates/reportquery-templates/list-all-projects-v1-reportquery.yaml
+oc create -f https://raw.githubusercontent.com/dburugupalli/SSMT/feature2/openshift-metering-templates/reports-templates/list-all-projects-v1-hourly.yaml
+# Wait for some time untilhttps://raw.githubusercontent.com/dburugupalli/SSMT/feature2/openshift-metering-templates/reports-templates/list-all-projects-v1-hourly.yaml reports get generated.
 # Install the python dependencies
 pip install flask 
 pip install flask_cors
