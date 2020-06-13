@@ -8,7 +8,7 @@ More Details about Metering Operator [Metering Operator](https://docs.openshift.
 
 1. OpenShift Account as Cluster Administrator
 
-2. Locally running OpenShift Cluster [CRC](https://developers.redhat.com/products/codeready-containers). Refer this [CRC for Openshift Reporting Backend]
+2. Locally running OpenShift Cluster [CRC](https://developers.redhat.com/products/codeready-containers). Refer this [CRC for Openshift Reporting Backend](https://github.com/dburugupalli/SSMT/blob/feature-1/Documentation/Installing_crc.md). 
 
 3. Enable Alerting,monitoring, telemetry on CRC cluster using following commands
 
@@ -149,6 +149,17 @@ oc create -f https://raw.githubusercontent.com/dburugupalli/SSMT/feature-1/opens
 ```
 When the report is created, data will be populated in ascending order
 
+##### Start the Flask web server using the following commands
+```bash
+# Install the python dependencies
+pip install flask 
+pip install flask_cors
+pip install requests
+# Set the Environment variables
+. config.sh 
+# Start the backend appplication server.
+python3 app.py
+```
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
