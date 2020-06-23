@@ -16,6 +16,7 @@ More Details about Metering Operator [Metering Operator](https://docs.openshift.
 oc scale --replicas=1 statefulset --all -n openshift-monitoring; 
 oc scale --replicas=1 deployment --all -n openshift-monitoring
 ```
+Note: if the above commands donot work, Please refer [CRC for Openshift Reporting Backend](https://github.com/dburugupalli/SSMT/blob/feature-1/Documentation/Installing_crc.md) under 'Error in starting Monitoting, Telemetry and Alerting Section'
 
 
 ### Installation

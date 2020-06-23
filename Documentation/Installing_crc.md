@@ -55,7 +55,7 @@ crc ip # This will give the Virtual Machine IP address
 #### Error in starting Monitoring, Telemetry and Alerting
 ```bash
 oc get clusterversion version -ojsonpath='{range .spec.overrides[*]}{.name}{"\n"}{end}' | nl -v 0
-
+#  Replace the unmanged-operator-index to [0 cluster-monitoring-operator]
 oc patch clusterversion/version --type='json' -p '[{"op":"remove", "path":"/spec/overrides/<unmanaged-operator-index>"}]' -oyaml
 
 ```
