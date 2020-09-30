@@ -1,0 +1,12 @@
+apiVersion: metering.openshift.io/v1
+kind: Report
+metadata:
+  name: namespace-cpu-request-weekly
+  namespace: openshift-metering
+spec:
+  query: namespace-cpu-request
+  schedule:
+    period: weekly
+    weekly:
+      dayOfWeek: "thursday"
+      hour: 13
