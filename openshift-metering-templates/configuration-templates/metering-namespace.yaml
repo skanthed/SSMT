@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: openshift-metering 
+  name: openshift-metering
   annotations:
-    openshift.io/node-selector: "" 
+    openshift.io/node-selector: ''
   labels:
-    openshift.io/cluster-monitoring: "true"
+    openshift.io/cluster-monitoring: 'true'
+
