@@ -31,7 +31,7 @@ oc login
 
 
 echo "Create openshift-metering namespace"
-oc create -f https://github.com/skanthed/SSMT/blob/bash-script/openshift-metering-templates/configuration-templates/metering-namespace.yaml
+oc create -f https://raw.githubusercontent.com/skanthed/SSMT/bash-script/openshift-metering-templates/configuration-templates/metering-namespace.yaml
 
 
 oc project openshift-metering
@@ -53,11 +53,10 @@ oc scale --replicas=1 deployment --all -n openshift-monitoring
 
 
 echo "Creating OperatorGroup object"
-oc create -f https://github.com/skanthed/SSMT/blob/bash-script/openshift-metering-templates/configuration-templates/metering-og.yaml
-
+oc create -f https://raw.githubusercontent.com/skanthed/SSMT/bash-script/openshift-metering-templates/configuration-templates/metering-og.yaml
 
 echo "Installing metering operator"
-oc create -f https://github.com/skanthed/SSMT/blob/bash-script/openshift-metering-templates/configuration-templates/metering-sub.yaml
+oc create -f https://raw.githubusercontent.com/skanthed/SSMT/bash-script/openshift-metering-templates/configuration-templates/metering-sub.yaml
 
 
 echo "Waiting to complete the Metering Operator Creation"
