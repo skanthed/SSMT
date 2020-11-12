@@ -1,13 +1,16 @@
 #!/bin/bash
 
+#To view reports on the terminal. 
+
 echo "Get into the openshift metering project"
 oc project openshift-metering
 
-echo "Get the lis of pods"
+echo "Get the list of all pods"
 oc -n openshift-metering get pods
 
 echo "See all the generated reports"
 oc get reportdatasources -n openshift-metering | grep -v raw
+
 
 echo " Setting meteringRoute"
 meteringRoute="$(oc get routes metering -o jsonpath='{.spec.host}')"

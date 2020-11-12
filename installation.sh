@@ -7,6 +7,8 @@ sudo systemctl start NetworkManager
 echo "Starting libvrtd service"
 sudo systemctl start libvirtd
 
+echo "Lets configure CRC cluster with 7+vcpus &16+GB memory"
+
 read -p "Enter memory in MB : " mem
 read -p "Enter number of cpus : " cpu
 echo "Entered memory size $mem "
@@ -19,52 +21,53 @@ crc config set memory $mem
 echo "View the CRC config"
 crc config view
 crc setup
-echo "Start the CRC"
+echo "Starting the CRC, make sure you have the right path to pull-secret.txt file"
 crc start -p pull-secret.txt 
 
 
-echo "Openshift admin login"
+
+echo "Openshift login - Take the credentials from the output of previous command. Use admin credentials to login, as you need to install operators"
 oc login
 
 
 echo "Create openshift-metering namespace"
-oc create -f metering-namespace.yaml
+oc create -f https://github.com/skanthed/SSMT/blob/bash-script/openshift-metering-templates/configuration-templates/metering-namespace.yaml
 
 
 oc project openshift-metering
 
 
-echo "Get cluster version"
+echo "Get the cluster versions"
 oc get clusterversion version -ojsonpath='{range .spec.overrides[*]}{.name}{"\n"}{end}' | nl -v 0
 
 
-echo "Patch the cluster version"
+echo "Patch the cluster versions and Replace the unmanged-operator-index to [0 cluster-monitoring-operator]"
 read -p "Enter un-managed operator index : " umidx
 oc patch clusterversion/version --type='json' -p '[{"op":"remove", "path":"/spec/overrides/' + $umidx + '"}]' -oyaml
 sleep 1m
 
 
-echo "Scales the Openshift Monitoring"
+echo "Scaling the Openshift Monitoring"
 oc scale --replicas=1 statefulset --all -n openshift-monitoring; 
 oc scale --replicas=1 deployment --all -n openshift-monitoring
 
 
-echo "Create OperatorGroup object"
-oc create -f metering-og.yaml
+echo "Creating OperatorGroup object"
+oc create -f https://github.com/skanthed/SSMT/blob/bash-script/openshift-metering-templates/configuration-templates/metering-og.yaml
 
 
-echo "Install metering operator"
-oc create -f metering-sub.yaml
+echo "Installing metering operator"
+oc create -f https://github.com/skanthed/SSMT/blob/bash-script/openshift-metering-templates/configuration-templates/metering-sub.yaml
 
 
-echo "Waiting to complete the Metering Creation"
+echo "Waiting to complete the Metering Operator Creation"
 sleep 10m  # 10 mins pause
 
 
 oc get pods
 
 
-echo "Project the openshift metering"
+echo "Now using project the openshift metering"
 oc project openshift-metering
 
 
@@ -73,9 +76,10 @@ oc create -f https://raw.githubusercontent.com/dburugupalli/SSMT/feature-1/opens
 sleep 25m 
 
 
-echo "Get pods details"
+echo "See the status of all component of metering stack"
 oc -n openshift-metering get pods
 
 
-echo "See all the generated reports"
+echo "Verifying Metering Stack / Configuration for local OCP cluster "
+echo "Metering stack creates sample instances of reportdatasource and reportqueries custom resources. "
 oc get reportdatasources -n openshift-metering | grep -v raw

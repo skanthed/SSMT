@@ -8,7 +8,7 @@ More Details about Metering Operator [Metering Operator](https://docs.openshift.
 
 1. OpenShift Account as Cluster Administrator
 
-2. Locally running OpenShift Cluster [CRC](https://developers.redhat.com/products/codeready-containers). Refer this [CRC for Openshift Reporting Backend](https://github.com/dburugupalli/SSMT/blob/feature-1/Documentation/Installing_crc.md). 
+2. Locally downloaded OpenShift Cluster [CRC](https://developers.redhat.com/products/codeready-containers). Refer this [CRC for Openshift Reporting Backend](https://github.com/dburugupalli/SSMT/blob/feature-1/Documentation/Installing_crc.md). 
 
 3. Enable Alerting,monitoring, telemetry on CRC cluster using following commands
 
@@ -21,60 +21,24 @@ Note: if the above commands donot work, Please refer [CRC for Openshift Reportin
 
 ### Installation
 
-#### Metering Operator Installation for local OCP cluster. 
+1. Clone the repository in your local machine.
+
+2. Make the installation.sh and report.sh file executable using -
 
 ``` bash
-# Login as the Cluster Administrator
- 
-a. Create a namespace openshift-metering 
-b. Label the namespace with `openshift.io/cluster-monitoring=true`
-c. Search Red Hat Metering under Operator Hub and Click Install. 
-d. Wait until Metering Operator pods are up and Running successfully.
-
-# Output after these steps
-NAME                                  READY   STATUS              RESTARTS   AGE
-
-metering-operator-68dd64cfb6-pxh8v    2/2     Running             0          2m49s
+chom +x <.sh file name>
 ```
 
-#### Installing Metering Stack / Metering Configuration for local OCP cluser
+3. Run the installation script file with command -
 
-Understanding [Metering Configuration](https://docs.openshift.com/container-platform/4.3/metering/configuring_metering/metering-about-configuring.html#metering-about-configuring)
-
-At a minimum, you need to configure persistent storage and configure the Hive metastore.[Refer Samples](https://docs.openshift.com/container-platform/4.3/metering/configuring_metering/metering-about-configuring.html#metering-about-configuring)
-
-
-```bash
-$ oc project openshift-metering
-$ oc create -f https://raw.githubusercontent.com/dburugupalli/SSMT/feature-1/openshift-metering-templates/configuration-templates/metering-configuration.yaml
- 
-# Wait until Componenets of metering stack are installed like hive metastore, presto database and 
-# reporting operator 
-
-$ oc -n openshift-metering get pods
-NAME                                 READY   STATUS    RESTARTS   AGE
-hive-metastore-0                     2/2     Running   14         7d15h
-hive-server-0                        3/3     Running   21         7d15h
-metering-operator-86b95669bb-njp4q   2/2     Running   14         7d15h
-presto-coordinator-0                 2/2     Running   8          7d2h
-reporting-operator-978687d9c-vkzrl   2/2     Running   27         7d15h
-# to view custom resource definations
-$ oc get crd | grep metering
-hivetables.metering.openshift.io                            2020-05-19T04:34:42Z
-meteringconfigs.metering.openshift.io                       2020-05-19T04:34:42Z
-prestotables.metering.openshift.io                          2020-05-19T04:34:42Z
-reportdatasources.metering.openshift.io                     2020-05-19T04:34:42Z
-reportqueries.metering.openshift.io                         2020-05-19T04:34:42Z
-reports.metering.openshift.io                               2020-05-19T04:34:42Z
-storagelocations.metering.openshift.io                      2020-05-19T04:34:42Z
+``` bash
+./installation.sh
 ```
 
-#### Verify Metering Stack / Configuration for local OCP cluster 
+Every steps tells you what it does and print the output of each command on terminal after it's executed.
 
-```bash
-oc get reportdatasources -n openshift-metering | grep -v raw
-```
-Metering stack creates sample instances of reportdatasource and reportqueries custom resources. 
+Expected output of few commands is mentioned here [Script Details](https://github.com/skanthed/SSMT/blob/bash-script/Documentation/Installation-script.md)
+
 
 ### Creating Reports 
 
@@ -83,15 +47,14 @@ For Now, lets use the pre-defined reportdatasources and reportqueries to generat
 ```bash
 $ oc project openshift-metering
 $ oc create -f https://raw.githubusercontent.com/dburugupalli/SSMT/feature-1/openshift-metering-templates/reports-templates/namespace-cpu-request-hourly.yaml
-$ meteringRoute="$(oc get routes metering -o jsonpath='{.spec.host}')"
-$ echo "$meteringRoute"
-$ token="$(oc whoami -t)"
-$ reportName=namespace-cpu-request-hourly
-$ reportFormat=json
-# Change reportForma=csv to get output in csv format
-$ curl --insecure -H "Authorization: Bearer ${token}" "https://${meteringRoute}/api/v1/reports/get?name=${reportName}&namespace=openshift-metering&format=$reportFormat"
+
 ```
 To view reports on the terminal. 
+Run report.sh file.
+
+``` bash
+./report.sh
+```
 
 ### Defining Report-Query and ReportDataSources to acheive specific functionality
 

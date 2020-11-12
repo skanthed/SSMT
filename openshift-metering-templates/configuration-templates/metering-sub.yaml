@@ -1,3 +1,4 @@
+#Make sure to change the channel version to the latest version of metering operator
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
